@@ -75,6 +75,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
         }
 
+
         holder.deletebtn.setOnClickListener {
             idForNote?.let { it1 ->
                 userList.clear()
@@ -111,6 +112,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
         val cardviewitem : CardView = itemview.findViewById(R.id.carditem)
         val deletebtn : Button = itemview.findViewById(R.id.btnDelete)
+
 
         init {
 

@@ -36,6 +36,7 @@ class TodoListActivity : AppCompatActivity() {
 
         userRecyclerView =findViewById(R.id.todoList)
         userRecyclerViewDone=findViewById(R.id.todoListForDone)
+        val remainItemCount : TextView = findViewById(R.id.itemCount)
 
         val fab: View = findViewById(R.id.addfloatingBtn)
 
@@ -46,10 +47,12 @@ class TodoListActivity : AppCompatActivity() {
         userRecyclerViewDone.setHasFixedSize(true)
 
 
+
         userArrayList = arrayListOf()
         userArrayListDone =arrayListOf()
         getUserData()
         getUserDataCompleted()
+
 
         fab.setOnClickListener {
 
@@ -90,7 +93,9 @@ class TodoListActivity : AppCompatActivity() {
                     val adapter = MyAdapter(userArrayList)
                     userRecyclerView.adapter = adapter
 
-
+                    val remainItemCount : TextView = findViewById(R.id.itemCount)
+                    val count = adapter.itemCount
+                    remainItemCount.setText("Remaining Tasks ("+count+")")
 
                     adapter.setOnItemClickListener(object :MyAdapter.onItemClickListener
                     {

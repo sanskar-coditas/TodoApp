@@ -13,25 +13,46 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoListForDone"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/single_todo_item"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         />
 
+    <TextView
+        android:id="@+id/itemCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/lato_bold"
+        android:text="Remaining Tasks(24)"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="@id/todoListForDone"
+        app:layout_constraintTop_toBottomOf="@id/todoListForDone"
+        android:paddingStart="23dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/todoList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@id/todoListForDone"
         app:layout_constraintTop_toTopOf="@id/todoListForDone"
         app:layout_constraintVertical_bias="1.0"
-        tools:listitem="@layout/single_todo_item" />
+        tools:listitem="@layout/single_todo_item"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addfloatingBtn"

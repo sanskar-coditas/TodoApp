@@ -39,7 +39,7 @@ class MyAdapterForDone(private val userList: ArrayList<User>) : RecyclerView.Ada
       database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
         databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
 
-        holder.cardviewitem.setBackgroundResource(R.color. cardcolor)
+        holder.cardviewitem.setBackgroundResource(R.drawable.corner)
         holder.donetask.setImageResource(R.drawable.donetask)
         holder.deletebtn.setOnClickListener {
             idForNote?.let { it1 ->
