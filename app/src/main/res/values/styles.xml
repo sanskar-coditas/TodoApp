@@ -28,6 +28,7 @@
         <item name="colorAccent">#2C6CD8</item>
         <item name="colorOnBackground">#2C6CD8</item>
         <item name="color">#2C6CD8</item>
+        <item name="srcCompat">@drawable/pluswhite</item>
 
     </style>
 

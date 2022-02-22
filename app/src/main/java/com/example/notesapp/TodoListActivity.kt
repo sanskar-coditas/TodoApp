@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.realtimedatabasekotlin.User
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_todo_list.*
+import kotlinx.android.synthetic.main.single_todo_item.*
 import kotlin.collections.ArrayList
 
 class TodoListActivity : AppCompatActivity() {
@@ -20,23 +22,25 @@ class TodoListActivity : AppCompatActivity() {
    // private lateinit var binding : MainActivityBinding
     private lateinit var database : DatabaseReference
     private lateinit var databasedone : DatabaseReference
+    private lateinit var databaseCount : DatabaseReference
     private lateinit var  userRecyclerView: RecyclerView
     private lateinit var  userRecyclerViewDone: RecyclerView
     private lateinit var userArrayList: ArrayList<User>
     private lateinit var userArrayListDone: ArrayList<User>
     private lateinit var loopthing : String
-
+        var count:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo_list)
 
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
-        getSupportActionBar()?.setCustomView(R.layout.abs);
+        getSupportActionBar()?.setCustomView(R.layout.abs)
 
         userRecyclerView =findViewById(R.id.todoList)
         userRecyclerViewDone=findViewById(R.id.todoListForDone)
         val remainItemCount : TextView = findViewById(R.id.itemCount)
+        //val abc:Button=findViewById(R.id.btnDelete)
 
         val fab: View = findViewById(R.id.addfloatingBtn)
 
@@ -59,6 +63,10 @@ class TodoListActivity : AppCompatActivity() {
             intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
         }
+
+        val adapter = MyAdapter(userArrayList)
+        userRecyclerView.adapter = adapter
+
         /*donetask.setOnClickListener {
 
         }*/
@@ -73,29 +81,52 @@ class TodoListActivity : AppCompatActivity() {
     private fun getUserData()
     {
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
-
+        databaseCount = FirebaseDatabase.getInstance().getReference("count")
 
        database.addValueEventListener(object  : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
                     userArrayList.clear()
-
+                    count =0
                 if(snapshot.exists()){
 
                     for (userSnapshot in snapshot.children)
                     {
                         val user = userSnapshot.getValue(User::class.java)
-
+                        if(user!!.doneOrNot=="no")
+                        {
+                            count++
+                        }
                         userArrayList.add(user!!)
 
                         Log.d("USER", "${user.toString()}" )
                     }
+
+                    this@TodoListActivity.itemCount.text= "Remaining Tasks( $count )"
+
+                    userArrayList.sortBy {
+
+                        it.doneOrNot
+                    }
                     val adapter = MyAdapter(userArrayList)
                     userRecyclerView.adapter = adapter
 
-                    val remainItemCount : TextView = findViewById(R.id.itemCount)
-                    val count = adapter.itemCount
-                    remainItemCount.setText("Remaining Tasks ("+count+")")
+                   // val remainItemCount : TextView = findViewById(R.id.itemCount)
+                   // val count = adapter.itemCount
+                   // databaseCount.setValue(count)
+
+                   /*databaseCount.addValueEventListener(object: ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot)
+                        {
+                            val c = snapshot.value
+                            remainItemCount.setText(Constants.REMAINING_TASKS +c+")")
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            TODO("Not yet implemented")
+                        }
+                    })*/
+
 
                     adapter.setOnItemClickListener(object :MyAdapter.onItemClickListener
                     {
@@ -118,6 +149,10 @@ class TodoListActivity : AppCompatActivity() {
 
 
                     }){}
+
+
+
+
 
 
                 }
@@ -180,7 +215,7 @@ class TodoListActivity : AppCompatActivity() {
                         }
 
 
-                    })*/ {}
+                    })run {}*/
 
 
                 }

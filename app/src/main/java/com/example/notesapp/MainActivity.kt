@@ -72,8 +72,6 @@ class MainActivity : AppCompatActivity() {
                         database.child(it1).removeValue().addOnSuccessListener {
                             edtTitleOfNote.text.clear()
                             edtNoteDiscripton.text.clear()
-
-
                             Toast.makeText(this, Constants.TASK_DELETED_MSG, Toast.LENGTH_SHORT).show()
 
                         }.addOnFailureListener {
@@ -103,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
             database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
 
-            val User = User(titleofnote, discription,idForNote,doneNot)
+            val User = User(titleofnote,discription,idForNote,doneNot)
             if(!noteType.equals(Constants.EDIT)) {
 
                 if (!TextUtils.isEmpty(titleofnote) && !TextUtils.isEmpty(discription)) {

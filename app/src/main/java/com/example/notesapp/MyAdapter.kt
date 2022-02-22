@@ -12,8 +12,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.realtimedatabasekotlin.User
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 
 
 class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>()
@@ -21,6 +20,8 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
     private lateinit var mListener : onItemClickListener
     private lateinit var database : DatabaseReference
     private lateinit var databasedone : DatabaseReference
+    private lateinit var databaseCount : DatabaseReference
+
 
     interface onItemClickListener{
 
@@ -52,30 +53,45 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
         val idForNote = userList[position].idForNote
         val discription = userList[position].edtNoteDiscripton
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
-        databasedone = FirebaseDatabase.getInstance().getReference("Completed")
+        databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
+        databaseCount = FirebaseDatabase.getInstance().getReference("count")
+
+
+
         holder.donetask.setOnClickListener {
 
 
             if (idForNote != null)
-            { if (done != null) {
-                if (title != null){
-                    if (discription != null){
+            { if (done != null)
+                {
+                if (title != null)
+                    {
+                    if (discription != null) {
 
-                        val User = User(title, discription,idForNote,"done")
 
-                        database.child(idForNote).child(Constants.TASK_DONE_OR_NOT).setValue(Constants.DONE_TEXT)
-                        userList.clear()
+                        val User = User(title, discription, idForNote, Constants.DONE_TEXT)
+
+                        database.child(idForNote).child(Constants.TASK_DONE_OR_NOT)
+                            .setValue(Constants.DONE_TEXT)
                         databasedone.child(idForNote).setValue(User)
-                        database.child(idForNote).removeValue();
 
 
 
+                        //holder.cardviewitem.setBackgroundResource(R.drawable.corner)
+                        //holder.donetask.setImageResource(R.drawable.donetask)
+                        //database.child(idForNote).removeValue()
+                        // database.child(idForNote).setValue(User)
+                    }}}}
 
-                }}}}
 
         }
 
+        if(done=="yes")
+        {
+            holder.cardviewitem.setBackgroundResource(R.drawable.corner)
+            holder.donetask.setImageResource(R.drawable.donetask)
 
+        }
         holder.deletebtn.setOnClickListener {
             idForNote?.let { it1 ->
                 userList.clear()
@@ -84,36 +100,20 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
                 }
             }
-
-
-
-        /*Log.d(Constants.DONE_TEXT,"$done")
-        if(done==Constants.DONE_TEXT)
-        {
-            holder.cardviewitem.setBackgroundResource(R.color. cardcolor)
-
-            holder.donetask.setImageResource(R.drawable.donetask)
-
-
-            //holder.absoluteAdapterPosition
-
-        }*/
-
-
-
     }
+
+
     override fun getItemCount(): Int {
         return userList.size
     }
+
+
     class MyViewHolder(itemview: View,listener: onItemClickListener): RecyclerView.ViewHolder(itemview)
     {
         val titleOfNote : TextView = itemview.findViewById(R.id.txtNoteTitle)
         val donetask : ImageView = itemview.findViewById(R.id.imgDone)
-
-        val cardviewitem : CardView = itemview.findViewById(R.id.carditem)
         val deletebtn : Button = itemview.findViewById(R.id.btnDelete)
-
-
+        val cardviewitem : CardView = itemview.findViewById(R.id.carditem)
         init {
 
             itemView.setOnClickListener {
@@ -123,10 +123,6 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
 
         }
-
-
-
-
 
     }
 }

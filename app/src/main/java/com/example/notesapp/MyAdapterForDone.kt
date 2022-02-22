@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.realtimedatabasekotlin.User
@@ -41,6 +40,7 @@ class MyAdapterForDone(private val userList: ArrayList<User>) : RecyclerView.Ada
 
         holder.cardviewitem.setBackgroundResource(R.drawable.corner)
         holder.donetask.setImageResource(R.drawable.donetask)
+
         holder.deletebtn.setOnClickListener {
             idForNote?.let { it1 ->
                 userList.clear()
