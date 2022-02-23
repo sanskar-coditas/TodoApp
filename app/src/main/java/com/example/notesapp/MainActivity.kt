@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : MainActivityBinding
     private lateinit var database : DatabaseReference
 
-        //val id  String
+        //Branch Sample Feature1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
