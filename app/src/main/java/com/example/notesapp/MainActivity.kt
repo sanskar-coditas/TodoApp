@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val noteType=intent.getStringExtra(getString(R.string.notetype))
 
         if(noteType.equals(getString(R.string.edit))){
-            Log.d("noteType", "$noteType" )
+           LoggerTodo.LogDebug(noteType.toString())
             val noteTitle=intent.getStringExtra(Constants.TITLE_OF_TASK)
             val noteDesc=intent.getStringExtra(Constants.DISCRIPTION_OF_TASK)
             val noteid = intent.getStringExtra(Constants.ID_OF_TASK)

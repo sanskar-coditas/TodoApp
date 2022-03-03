@@ -56,8 +56,6 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
         databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
         databaseCount = FirebaseDatabase.getInstance().getReference("count")
 
-
-
         holder.donetask.setOnClickListener {
 
 
@@ -67,9 +65,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
                 if (title != null)
                     {
                     if (discription != null) {
-
-
-                        val User = User(title, discription, idForNote, Constants.DONE_TEXT)
+                    val User = User(title, discription, idForNote, Constants.DONE_TEXT)
 
                         database.child(idForNote).child(Constants.TASK_DONE_OR_NOT)
                             .setValue(Constants.DONE_TEXT)

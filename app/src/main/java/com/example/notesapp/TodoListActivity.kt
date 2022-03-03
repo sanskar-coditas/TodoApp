@@ -9,8 +9,10 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.notesapp.databinding.ActivityTodoListBinding
 import com.example.realtimedatabasekotlin.User
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_todo_list.*
@@ -23,32 +25,32 @@ class TodoListActivity : AppCompatActivity() {
     private lateinit var database : DatabaseReference
     private lateinit var databasedone : DatabaseReference
     private lateinit var databaseCount : DatabaseReference
-    private lateinit var  userRecyclerView: RecyclerView
-    private lateinit var  userRecyclerViewDone: RecyclerView
+
     private lateinit var userArrayList: ArrayList<User>
     private lateinit var userArrayListDone: ArrayList<User>
     private lateinit var loopthing : String
+    private lateinit var binding: ActivityTodoListBinding
         var count:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_todo_list)
+        binding= DataBindingUtil.setContentView(this,R.layout.activity_todo_list)
 
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         getSupportActionBar()?.setCustomView(R.layout.abs)
 
-        userRecyclerView =findViewById(R.id.todoList)
-        userRecyclerViewDone=findViewById(R.id.todoListForDone)
-        val remainItemCount : TextView = findViewById(R.id.itemCount)
+        //userRecyclerView =findViewById(R.id.todoList)
+        //userRecyclerViewDone=findViewById(R.id.todoListForDone)
+        //val remainItemCount : TextView = findViewById(R.id.itemCount)
         //val abc:Button=findViewById(R.id.btnDelete)
 
         val fab: View = findViewById(R.id.addfloatingBtn)
 
-        userRecyclerView.layoutManager = LinearLayoutManager(this)
-        userRecyclerViewDone.layoutManager = LinearLayoutManager(this)
+        binding.todoList.layoutManager = LinearLayoutManager(this)
+        binding.todoListForDone.layoutManager = LinearLayoutManager(this)
 
-        userRecyclerView.setHasFixedSize(true)
-        userRecyclerViewDone.setHasFixedSize(true)
+        binding.todoList.setHasFixedSize(true)
+        binding.todoListForDone.setHasFixedSize(true)
 
 
 
@@ -58,14 +60,14 @@ class TodoListActivity : AppCompatActivity() {
         getUserDataCompleted()
 
 
-        fab.setOnClickListener {
+        binding.addfloatingBtn  .setOnClickListener {
 
             intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
         }
 
         val adapter = MyAdapter(userArrayList)
-        userRecyclerView.adapter = adapter
+        binding.todoList.adapter = adapter
 
         /*donetask.setOnClickListener {
 
@@ -81,7 +83,7 @@ class TodoListActivity : AppCompatActivity() {
     private fun getUserData()
     {
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
-        databaseCount = FirebaseDatabase.getInstance().getReference("count")
+        //databaseCount = FirebaseDatabase.getInstance().getReference("count")
 
        database.addValueEventListener(object  : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -102,14 +104,14 @@ class TodoListActivity : AppCompatActivity() {
                         Log.d("USER", "${user.toString()}" )
                     }
 
-                    this@TodoListActivity.itemCount.text= "Remaining Tasks( $count )"
+                    this@TodoListActivity.binding.itemCount.text= "Remaining Tasks( $count )"
 
                     userArrayList.sortBy {
 
                         it.doneOrNot
                     }
                     val adapter = MyAdapter(userArrayList)
-                    userRecyclerView.adapter = adapter
+                    binding.todoList.adapter = adapter
 
                    // val remainItemCount : TextView = findViewById(R.id.itemCount)
                    // val count = adapter.itemCount
@@ -192,7 +194,7 @@ class TodoListActivity : AppCompatActivity() {
                         Log.d("USER", "${user.toString()}" )
                     }
                     val adapter = MyAdapterForDone(userArrayListDone)
-                    userRecyclerViewDone.adapter = adapter
+                    binding.todoListForDone.adapter = adapter
 
 
                     /*adapter.setOnItemClickListener(object :MyAdapterForDone.onItemClickListener

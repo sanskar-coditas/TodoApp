@@ -35,7 +35,7 @@ class MyAdapterForDone(private val userList: ArrayList<User>) : RecyclerView.Ada
         val currentitem = userList[position]
         holder.titleOfNote.text = currentitem.edtTitleOfNote
         val idForNote = userList[position].idForNote
-      database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
+        database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
         databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
 
         holder.cardviewitem.setBackgroundResource(R.drawable.corner)
