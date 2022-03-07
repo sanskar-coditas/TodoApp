@@ -5,30 +5,30 @@ import android.util.Log
 class LoggerTodo {
     companion object {
 
-        fun LogInfo(Info:String)
+        fun logInfo(Info:String)
         {
             Log.i("Info of logger",Info )
         }
-        fun LogDebug(Debug:String)
+        fun logDebug(Debug:String)
         {
             Log.d("Debug of logger",Debug )
         }
-        fun LogVerbose(Verbose:String)
+        fun logVerbose(Verbose:String)
         {
             Log.v("Verbose of logger",Verbose )
         }
-        fun LogWarn(Warn:String)
+        fun logWarn(Warn:String)
         {
             Log.w("Warn of logger",Warn )
         }
-        fun LogError(Error:String)
+        fun logError(Error:String)
         {
             Log.e("Error of logger",Error )
         }
-        fun LogAssert(Assert:String)
+        fun logAssert(Assert:String)
         {
             Log.wtf("Assert of logger",Assert )
-            
+
         }
 
     }

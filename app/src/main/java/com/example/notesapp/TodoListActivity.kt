@@ -5,18 +5,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.notesapp.adapters.MyAdapter
+import com.example.notesapp.adapters.MyAdapterForDone
+import com.example.notesapp.constants.Constants
 import com.example.notesapp.databinding.ActivityTodoListBinding
-import com.example.realtimedatabasekotlin.User
+import com.example.notesapp.dataclasses.User
 import com.google.firebase.database.*
-import kotlinx.android.synthetic.main.activity_todo_list.*
-import kotlinx.android.synthetic.main.single_todo_item.*
 import kotlin.collections.ArrayList
 
 class TodoListActivity : AppCompatActivity() {
@@ -56,11 +53,12 @@ class TodoListActivity : AppCompatActivity() {
 
         userArrayList = arrayListOf()
         userArrayListDone =arrayListOf()
+
         getUserData()
         getUserDataCompleted()
 
 
-        binding.addfloatingBtn  .setOnClickListener {
+        binding.addfloatingBtn.setOnClickListener {
 
             intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
@@ -86,7 +84,8 @@ class TodoListActivity : AppCompatActivity() {
         //databaseCount = FirebaseDatabase.getInstance().getReference("count")
 
        database.addValueEventListener(object  : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
 
                     userArrayList.clear()
                     count =0
@@ -98,13 +97,16 @@ class TodoListActivity : AppCompatActivity() {
                         if(user!!.doneOrNot=="no")
                         {
                             count++
+                            LoggerTodo.logDebug("if condition is running")
                         }
                         userArrayList.add(user!!)
 
                         Log.d("USER", "${user.toString()}" )
+                        LoggerTodo.logDebug(count.toString())
                     }
 
-                    this@TodoListActivity.binding.itemCount.text= "Remaining Tasks( $count )"
+                    binding.itemCount.text= "Remaining Tasks( $count )"
+                    LoggerTodo.logDebug(count.toString())
 
                     userArrayList.sortBy {
 
@@ -130,7 +132,7 @@ class TodoListActivity : AppCompatActivity() {
                     })*/
 
 
-                    adapter.setOnItemClickListener(object :MyAdapter.onItemClickListener
+                    adapter.setOnItemClickListener(object : MyAdapter.onItemClickListener
                     {
                         override fun onItemClick(position: Int) {
                             val idForNote = userArrayList[position].idForNote
