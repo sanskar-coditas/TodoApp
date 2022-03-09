@@ -3,13 +3,15 @@ package com.example.notesapp
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.constants.Constants
 import com.example.notesapp.databinding.MainActivityBinding
-import com.example.notesapp.dataclasses.DataAll
-import com.example.notesapp.repository.MainActivityRepository
+import com.example.notesapp.dataclasses.TaskOfNote
+
+import com.example.notesapp.repository.TaskInOpRepo
 import com.example.notesapp.viewmodels.MainViewModel
 import com.example.notesapp.viewmodels.MainViewModelFactory
 import com.google.firebase.database.DatabaseReference
@@ -23,6 +25,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : MainActivityBinding
     private lateinit var database : DatabaseReference
     lateinit var mainViewModel: MainViewModel
+    private val taskInOpRepo= TaskInOpRepo()
+
 
 
         //val id  String
@@ -35,9 +39,13 @@ class MainActivity : AppCompatActivity() {
         getSupportActionBar()?.setCustomView(R.layout.abs);
 
 
+
         database = FirebaseDatabase.getInstance().getReference(getString(R.string.databaseRefTodo))
-        mainViewModel = ViewModelProvider(this, MainViewModelFactory(MainActivityRepository())).get(
+           // val taskInOpRepo = TaskInOpRepo()
+            mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
             MainViewModel::class.java)
+
+
 
 
         val noteIdp = intent.getStringExtra(getString(R.string.uniqueIdForTask))
@@ -64,12 +72,26 @@ class MainActivity : AppCompatActivity() {
             if(noteType.equals(Constants.EDIT))
             {
                 binding.btnDelete.visibility= View.VISIBLE
+
                 binding.btnDelete.setOnClickListener {
 
-                    mainViewModel.deleteData(this,noteIdp.toString())
+                    mainViewModel.deleteData(noteIdp.toString())
 
-                    binding.edtTitleOfNote.text.clear()
-                    binding.edtNoteDiscripton.text.clear()
+                    mainViewModel.callbackDataDelete(object: TaskInOpRepo.SomeCallbackDelete{
+                        override fun onSuccess() {
+                            Toast.makeText(this@MainActivity, Constants.TASK_DELETED_MSG, Toast.LENGTH_SHORT).show()
+                            binding.edtTitleOfNote.text.clear()
+                            binding.edtNoteDiscripton.text.clear()
+                        }
+
+                        override fun onFailure() {
+                            Toast.makeText(this@MainActivity, Constants.FAILED_DELETED_MSG, Toast.LENGTH_SHORT).show()
+                        }
+
+                    })
+
+
+
                 }
             }
         }
@@ -78,18 +100,35 @@ class MainActivity : AppCompatActivity() {
             enterButton.text = Constants.ENTER_BUTTON_TEXT
         }
 
+        mainViewModel.callbackData(object: TaskInOpRepo.SomeCallbackInterface{
+
+            override fun onSuccess() {
+                LoggerTodo.logInfo("callbackdata in inside onSuccess main activity")
+                Toast.makeText(this@MainActivity, Constants.TASK_SAVED_MSG, Toast.LENGTH_SHORT).show()
+                binding.edtTitleOfNote.text.clear()
+                binding.edtNoteDiscripton.text.clear()
+            }
+
+            override fun onFailure() {
+                Toast.makeText(this@MainActivity, Constants.FAILED_SAVE_MSG, Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
         binding.enterButton.setOnClickListener {
             val titleOfNote = binding.edtTitleOfNote.text.toString()
             val discretionNote = binding.edtNoteDiscripton.text.toString()
             val idForNote = UUID.randomUUID().toString()
             val doneNot = Constants.NOT_DONE_TEXT
 
-            val allDataAll = DataAll(titleOfNote,discretionNote,idForNote,doneNot,noteType,noteIdp,this)
+
+            val allDataAll = TaskOfNote(titleOfNote,discretionNote,idForNote,doneNot,noteType,noteIdp)
             Log.d("sanskarpawar",allDataAll.toString())
+
             mainViewModel.insertData(allDataAll)
 
-            binding.edtTitleOfNote.text.clear()
-            binding.edtNoteDiscripton.text.clear()
+
+
 
 
         }
@@ -162,8 +201,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
-
 
 
 

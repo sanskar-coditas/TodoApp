@@ -16,10 +16,11 @@ import com.google.firebase.database.*
 
 class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>()
 {
-    private lateinit var mListener : onItemClickListener
+
     private lateinit var database : DatabaseReference
     private lateinit var databasedone : DatabaseReference
     private lateinit var databaseCount : DatabaseReference
+    private lateinit var mListener : onItemClickListener
 
 
     interface onItemClickListener{
@@ -28,8 +29,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener, function: () -> Unit){
-
+    fun setOnItemClickListener(listener: onItemClickListener){
         mListener = listener
 
     }
@@ -91,7 +91,6 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
             idForNote?.let { it1 ->
                 userList.clear()
                 database.child(it1).removeValue();
-
 
                 }
             }

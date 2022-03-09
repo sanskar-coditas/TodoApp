@@ -1,18 +1,31 @@
 package com.example.notesapp.viewmodels
 
-import android.content.Context
-import androidx.lifecycle.ViewModel
-import com.example.notesapp.dataclasses.DataAll
-import com.example.notesapp.repository.MainActivityRepository
 
-class MainViewModel(private val mainActivityRepository: MainActivityRepository):ViewModel() {
-    fun insertData (dataAll: DataAll)
-    {
-        return mainActivityRepository.insertingData(dataAll)
+import androidx.lifecycle.ViewModel
+import com.example.notesapp.LoggerTodo
+import com.example.notesapp.dataclasses.TaskOfNote
+
+import com.example.notesapp.repository.TaskInOpRepo
+
+class MainViewModel(private val taskInOpRepo: TaskInOpRepo):ViewModel() {
+
+    fun callbackData(mCallBackData:TaskInOpRepo.SomeCallbackInterface){
+        LoggerTodo.logInfo("callbackdata mainviewmodel ")
+       return taskInOpRepo.initOnClickInterface(mCallBackData)
     }
-    fun deleteData(context: Context,noteID:String)
-    {
-        return mainActivityRepository.deletingData(context,noteID)
+
+    fun callbackDataDelete(mCallBackDataDelete:TaskInOpRepo.SomeCallbackDelete){
+
+        return taskInOpRepo.initOnClickDelete(mCallBackDataDelete)
     }
+    fun insertData (taskOfNote: TaskOfNote)
+    {
+        return taskInOpRepo.insertingData(taskOfNote)
+    }
+    fun deleteData(noteID:String)
+    {
+        return taskInOpRepo.deletingData(noteID)
+    }
+
 
 }
