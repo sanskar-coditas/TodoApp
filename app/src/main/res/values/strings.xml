@@ -17,4 +17,7 @@
     <string name="databaseRefTodo">Todo</string>
     <string name="uniqueIdForTask">idForNote</string>
     <string name="AppName">My Todo</string>
+
+
+    <string name="remaining_Task">Remaining Task(%1$d).</string>
 </resources>

@@ -29,7 +29,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener){
+    fun setOnItemClickListener(listener: onItemClickListener, function: () -> Unit){
         mListener = listener
 
     }
@@ -87,6 +87,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
             holder.donetask.setImageResource(R.drawable.donetask)
 
         }
+
         holder.deletebtn.setOnClickListener {
             idForNote?.let { it1 ->
                 userList.clear()

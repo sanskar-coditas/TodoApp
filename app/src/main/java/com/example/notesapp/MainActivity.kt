@@ -116,6 +116,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         binding.enterButton.setOnClickListener {
+
             val titleOfNote = binding.edtTitleOfNote.text.toString()
             val discretionNote = binding.edtNoteDiscripton.text.toString()
             val idForNote = UUID.randomUUID().toString()

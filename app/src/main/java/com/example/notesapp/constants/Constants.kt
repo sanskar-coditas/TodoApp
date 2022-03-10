@@ -23,7 +23,7 @@ class Constants {
             const val FAILED_UPDATE_MSG = "Failed to update"
             const val COMPLETED = "Completed"
             const val COUNT = "Count"
-            const val REMAINING_TASKS = "Remaining Tasks ("
+            const val REMAINING_TASKS = "Remaining Tasks"
 
 
     }

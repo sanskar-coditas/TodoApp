@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.ActionBar
+import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,11 +15,14 @@ import com.example.notesapp.adapters.MyAdapterForDone
 import com.example.notesapp.constants.Constants
 import com.example.notesapp.databinding.ActivityTodoListBinding
 import com.example.notesapp.dataclasses.User
-import com.example.notesapp.repository.TaskInOpRepo
-import com.example.notesapp.repository.TodoActivityRepository
+import com.example.notesapp.repository.GetDataRepo
+
+
 import com.example.notesapp.viewmodels.TodoViewModel
 import com.example.notesapp.viewmodels.TodoViewModelFactory
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.*
+import kotlinx.android.synthetic.main.activity_todo_list.*
 import kotlin.collections.ArrayList
 
 class TodoListActivity : AppCompatActivity() {
@@ -32,12 +36,13 @@ class TodoListActivity : AppCompatActivity() {
     private lateinit var userArrayListDone: ArrayList<User>
     private lateinit var loopthing : String
     private lateinit var binding: ActivityTodoListBinding
-    private lateinit var todoViewModel: TodoViewModel
-        var count:Int=0
+     lateinit var todoViewModel: TodoViewModel
+    val getDataRepo =GetDataRepo()
+        //var count:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= DataBindingUtil.setContentView(this,R.layout.activity_todo_list)
 
+        binding= DataBindingUtil.setContentView(this,R.layout.activity_todo_list)
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         getSupportActionBar()?.setCustomView(R.layout.abs)
@@ -46,6 +51,7 @@ class TodoListActivity : AppCompatActivity() {
         //userRecyclerViewDone=findViewById(R.id.todoListForDone)
         //val remainItemCount : TextView = findViewById(R.id.itemCount)
         //val abc:Button=findViewById(R.id.btnDelete)
+
 
         val fab: View = findViewById(R.id.addfloatingBtn)
 
@@ -60,21 +66,27 @@ class TodoListActivity : AppCompatActivity() {
         userArrayList = arrayListOf()
         userArrayListDone =arrayListOf()
 
-        getUserData()
-        getUserDataCompleted()
+
 
 
 
 
         binding.addfloatingBtn.setOnClickListener {
 
-            intent = Intent(applicationContext, MainActivity::class.java)
+            intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+
 
         val adapter = MyAdapter(userArrayList)
         binding.todoList.adapter = adapter
 
+            todoViewModel = ViewModelProvider(this, TodoViewModelFactory(getDataRepo)).get(TodoViewModel::class.java)
+            todoViewModel.gettingData(userArrayList)
+
+            getUserData()
+            getUserDataCompleted()
         /*donetask.setOnClickListener {
 
         }*/
@@ -84,57 +96,63 @@ class TodoListActivity : AppCompatActivity() {
           //  sizeOfList.text = userArrayList.size
 
 
+
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+       userArrayList.clear()
+        userArrayListDone.clear()
+    }
+
 
     private fun getUserData()
     {
-        val todoActivityRepository =TodoActivityRepository()
-
-        todoViewModel = ViewModelProvider(this, TodoViewModelFactory(todoActivityRepository)).get(
-            TodoViewModel::class.java)
-
-        todoViewModel.gettingData(userArrayList,count,binding)
-
-       todoViewModel.callbackGettingData(object: TodoActivityRepository.SomeCallbackInterface{
-           override fun onAdapter(adapterAttach: MyAdapter) {
+             //todoViewModel = ViewModelProvider(this, TodoViewModelFactory(getDataRepo)).get(
+                //TodoViewModel::class.java)
 
 
-               adapterAttach.setOnItemClickListener(object : MyAdapter.onItemClickListener
-               {
-                   override fun onItemClick(position: Int) {
-                       val idForNote = userArrayList[position].idForNote
-                       val edtTitleOfNote = userArrayList[position].edtTitleOfNote
-                       val edtNoteDiscripton = userArrayList[position].edtNoteDiscripton
+        todoViewModel.callbackGettingData(object: GetDataRepo.SomeCallbackInterface{
+            override fun onAdapter(userArrayListAfter : ArrayList<User>, countTask:Int) {
 
-                       val intent = Intent(this@TodoListActivity,MainActivity::class.java)
+                val adapter = MyAdapter(userArrayListAfter)
+                binding.todoList.adapter = adapter
 
-                       intent.putExtra(Constants.NOTE_TYPE, Constants.EDIT)
-                       intent.putExtra(Constants.TITLE_OF_TASK, edtTitleOfNote)
-                       intent.putExtra(Constants.DISCRIPTION_OF_TASK,edtNoteDiscripton)
-                       intent.putExtra(Constants.ID_OF_TASK,idForNote)
+                binding.itemCount.text = getString(R.string.remaining_Task, countTask)
 
-                       Log.d("idofnote", "$idForNote" )
-                       Log.d("noteTitle", "$edtTitleOfNote" )
+                adapter.setOnItemClickListener(object : MyAdapter.onItemClickListener {
+                    override fun onItemClick(position: Int)
+                    {
+                        val idForNote = userArrayList[position].idForNote
+                        val edtTitleOfNote = userArrayList[position].edtTitleOfNote
+                        val edtNoteDiscripton = userArrayList[position].edtNoteDiscripton
 
-                       startActivity(intent)
-                       //Toast.makeText(this@TodoListActivity,"you Clicked on $edtTitleOfNote ",Toast.LENGTH_LONG).show()
-                   }
+                        val intent = Intent(this@TodoListActivity, MainActivity::class.java)
+
+                        intent.putExtra(Constants.NOTE_TYPE, Constants.EDIT)
+                        intent.putExtra(Constants.TITLE_OF_TASK, edtTitleOfNote)
+                        intent.putExtra(Constants.DISCRIPTION_OF_TASK, edtNoteDiscripton)
+                        intent.putExtra(Constants.ID_OF_TASK, idForNote)
+
+                        Log.d("idofnote", "$idForNote")
+                        Log.d("noteTitle", "$edtTitleOfNote")
+
+                        startActivity(intent)
+                        //Toast.makeText(this@TodoListActivity,"you Clicked on $edtTitleOfNote ",Toast.LENGTH_LONG).show()
+                    }
 
 
-               })
+                }){
 
-
-           }
-
-       })
+                }
 
 
 
 
 
+            }
 
-
-
+        })
 
 
 
