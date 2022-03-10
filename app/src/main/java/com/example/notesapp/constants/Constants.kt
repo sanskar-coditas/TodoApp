@@ -1,4 +1,4 @@
-package com.example.notesapp
+package com.example.notesapp.constants
 
 class Constants {
 
@@ -12,7 +12,7 @@ class Constants {
             const val ENTER_BUTTON_TEXT ="Save Task"
             const val EDIT ="Edit"
             const val NOTE_TYPE ="noteType"
-            const val NOT_DONE_TEXT ="no "
+            const val NOT_DONE_TEXT ="no"
             const val DONE_TEXT ="yes"
             const val TASK_DELETED_MSG ="Successfully Deleted"
             const val FAILED_DELETED_MSG ="Successfully Deleted"
@@ -22,7 +22,8 @@ class Constants {
             const val TASK_UPDATE_MSG ="Successfully updated"
             const val FAILED_UPDATE_MSG = "Failed to update"
             const val COMPLETED = "Completed"
-            const val REMAINING_TASKS = "Remaining Tasks ("
+            const val COUNT = "Count"
+            const val REMAINING_TASKS = "Remaining Tasks"
 
 
     }

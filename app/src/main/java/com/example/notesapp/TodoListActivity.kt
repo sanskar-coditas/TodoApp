@@ -5,18 +5,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.core.view.size
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.notesapp.adapters.MyAdapter
+import com.example.notesapp.adapters.MyAdapterForDone
+import com.example.notesapp.constants.Constants
 import com.example.notesapp.databinding.ActivityTodoListBinding
-import com.example.realtimedatabasekotlin.User
+import com.example.notesapp.dataclasses.User
+import com.example.notesapp.repository.GetDataRepo
+
+
+import com.example.notesapp.viewmodels.TodoViewModel
+import com.example.notesapp.viewmodels.TodoViewModelFactory
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_todo_list.*
-import kotlinx.android.synthetic.main.single_todo_item.*
 import kotlin.collections.ArrayList
 
 class TodoListActivity : AppCompatActivity() {
@@ -30,11 +36,13 @@ class TodoListActivity : AppCompatActivity() {
     private lateinit var userArrayListDone: ArrayList<User>
     private lateinit var loopthing : String
     private lateinit var binding: ActivityTodoListBinding
-        var count:Int=0
+     lateinit var todoViewModel: TodoViewModel
+    val getDataRepo =GetDataRepo()
+        //var count:Int=0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding= DataBindingUtil.setContentView(this,R.layout.activity_todo_list)
 
+        binding= DataBindingUtil.setContentView(this,R.layout.activity_todo_list)
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         getSupportActionBar()?.setCustomView(R.layout.abs)
@@ -43,6 +51,7 @@ class TodoListActivity : AppCompatActivity() {
         //userRecyclerViewDone=findViewById(R.id.todoListForDone)
         //val remainItemCount : TextView = findViewById(R.id.itemCount)
         //val abc:Button=findViewById(R.id.btnDelete)
+
 
         val fab: View = findViewById(R.id.addfloatingBtn)
 
@@ -56,19 +65,28 @@ class TodoListActivity : AppCompatActivity() {
 
         userArrayList = arrayListOf()
         userArrayListDone =arrayListOf()
-        getUserData()
-        getUserDataCompleted()
 
 
-        binding.addfloatingBtn  .setOnClickListener {
 
-            intent = Intent(applicationContext, MainActivity::class.java)
+
+
+
+        binding.addfloatingBtn.setOnClickListener {
+
+            intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+
+
 
         val adapter = MyAdapter(userArrayList)
         binding.todoList.adapter = adapter
 
+            todoViewModel = ViewModelProvider(this, TodoViewModelFactory(getDataRepo)).get(TodoViewModel::class.java)
+            todoViewModel.gettingData(userArrayList)
+
+            getUserData()
+            getUserDataCompleted()
         /*donetask.setOnClickListener {
 
         }*/
@@ -78,15 +96,84 @@ class TodoListActivity : AppCompatActivity() {
           //  sizeOfList.text = userArrayList.size
 
 
+
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+       userArrayList.clear()
+        userArrayListDone.clear()
+    }
+
 
     private fun getUserData()
     {
-        database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
-        //databaseCount = FirebaseDatabase.getInstance().getReference("count")
+             //todoViewModel = ViewModelProvider(this, TodoViewModelFactory(getDataRepo)).get(
+                //TodoViewModel::class.java)
 
-       database.addValueEventListener(object  : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
+
+        todoViewModel.callbackGettingData(object: GetDataRepo.SomeCallbackInterface{
+            override fun onAdapter(userArrayListAfter : ArrayList<User>, countTask:Int) {
+
+                val adapter = MyAdapter(userArrayListAfter)
+                binding.todoList.adapter = adapter
+
+                binding.itemCount.text = getString(R.string.remaining_Task, countTask)
+
+                adapter.setOnItemClickListener(object : MyAdapter.onItemClickListener {
+                    override fun onItemClick(position: Int)
+                    {
+                        val idForNote = userArrayList[position].idForNote
+                        val edtTitleOfNote = userArrayList[position].edtTitleOfNote
+                        val edtNoteDiscripton = userArrayList[position].edtNoteDiscripton
+
+                        val intent = Intent(this@TodoListActivity, MainActivity::class.java)
+
+                        intent.putExtra(Constants.NOTE_TYPE, Constants.EDIT)
+                        intent.putExtra(Constants.TITLE_OF_TASK, edtTitleOfNote)
+                        intent.putExtra(Constants.DISCRIPTION_OF_TASK, edtNoteDiscripton)
+                        intent.putExtra(Constants.ID_OF_TASK, idForNote)
+
+                        Log.d("idofnote", "$idForNote")
+                        Log.d("noteTitle", "$edtTitleOfNote")
+
+                        startActivity(intent)
+                        //Toast.makeText(this@TodoListActivity,"you Clicked on $edtTitleOfNote ",Toast.LENGTH_LONG).show()
+                    }
+
+
+                }){
+
+                }
+
+
+
+
+
+            }
+
+        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       //database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
+        //databaseCount = FirebaseDatabase.getInstance().getReference("count")
+     /*  database.addValueEventListener(object  : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot)
+            {
 
                     userArrayList.clear()
                     count =0
@@ -98,13 +185,16 @@ class TodoListActivity : AppCompatActivity() {
                         if(user!!.doneOrNot=="no")
                         {
                             count++
+                            LoggerTodo.logDebug("if condition is running")
                         }
                         userArrayList.add(user!!)
 
                         Log.d("USER", "${user.toString()}" )
+                        LoggerTodo.logDebug(count.toString())
                     }
 
-                    this@TodoListActivity.binding.itemCount.text= "Remaining Tasks( $count )"
+                    binding.itemCount.text= "Remaining Tasks( $count )"
+                    LoggerTodo.logDebug(count.toString())
 
                     userArrayList.sortBy {
 
@@ -113,24 +203,8 @@ class TodoListActivity : AppCompatActivity() {
                     val adapter = MyAdapter(userArrayList)
                     binding.todoList.adapter = adapter
 
-                   // val remainItemCount : TextView = findViewById(R.id.itemCount)
-                   // val count = adapter.itemCount
-                   // databaseCount.setValue(count)
 
-                   /*databaseCount.addValueEventListener(object: ValueEventListener{
-                        override fun onDataChange(snapshot: DataSnapshot)
-                        {
-                            val c = snapshot.value
-                            remainItemCount.setText(Constants.REMAINING_TASKS +c+")")
-                        }
-
-                        override fun onCancelled(error: DatabaseError) {
-                            TODO("Not yet implemented")
-                        }
-                    })*/
-
-
-                    adapter.setOnItemClickListener(object :MyAdapter.onItemClickListener
+                    adapter.setOnItemClickListener(object : MyAdapter.onItemClickListener
                     {
                         override fun onItemClick(position: Int) {
                             val idForNote = userArrayList[position].idForNote
@@ -150,24 +224,14 @@ class TodoListActivity : AppCompatActivity() {
                         }
 
 
-                    }){}
-
-
-
-
-
+                    })
 
                 }
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
-
             }
-
-
-        })
+        })*/
 
 
 
@@ -195,30 +259,6 @@ class TodoListActivity : AppCompatActivity() {
                     }
                     val adapter = MyAdapterForDone(userArrayListDone)
                     binding.todoListForDone.adapter = adapter
-
-
-                    /*adapter.setOnItemClickListener(object :MyAdapterForDone.onItemClickListener
-                        {
-                        override fun onItemClick(position: Int) {
-                            val idForNote = userArrayListDone[position].idForNote
-                            val edtTitleOfNote = userArrayListDone[position].edtTitleOfNote
-                            val edtNoteDiscripton = userArrayListDone[position].edtNoteDiscripton
-                            val intent = Intent(this@TodoListActivity,MainActivity::class.java)
-                            intent.putExtra(Constants.NOTE_TYPE, Constants.EDIT)
-                            intent.putExtra(Constants.TITLE_OF_TASK, edtTitleOfNote)
-                            intent.putExtra(Constants.DISCRIPTION_OF_TASK,edtNoteDiscripton)
-                            intent.putExtra(Constants.ID_OF_TASK,idForNote)
-
-                            Log.d("idofnote", "$idForNote" )
-                            Log.d("noteTitle", "$edtTitleOfNote" )
-
-                            startActivity(intent)
-                            //Toast.makeText(this@TodoListActivity,"you Clicked on $edtTitleOfNote ",Toast.LENGTH_LONG).show()
-                        }
-
-
-                    })run {}*/
-
 
                 }
 

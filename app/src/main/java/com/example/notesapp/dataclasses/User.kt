@@ -1,4 +1,4 @@
-package com.example.realtimedatabasekotlin
+package com.example.notesapp.dataclasses
 
 import java.util.*
 

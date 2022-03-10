@@ -1,7 +1,5 @@
-package com.example.notesapp
+package com.example.notesapp.adapters
 
-import android.provider.Settings.Global.getString
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +8,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.realtimedatabasekotlin.User
+import com.example.notesapp.constants.Constants
+import com.example.notesapp.R
+import com.example.notesapp.dataclasses.User
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 

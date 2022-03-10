@@ -1,26 +1,26 @@
-package com.example.notesapp
+package com.example.notesapp.adapters
 
-import android.provider.Settings.Global.getString
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.realtimedatabasekotlin.User
+import com.example.notesapp.constants.Constants
+import com.example.notesapp.R
+import com.example.notesapp.dataclasses.User
 import com.google.firebase.database.*
 
 
 class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>()
 {
-    private lateinit var mListener : onItemClickListener
+
     private lateinit var database : DatabaseReference
     private lateinit var databasedone : DatabaseReference
     private lateinit var databaseCount : DatabaseReference
+    private lateinit var mListener : onItemClickListener
 
 
     interface onItemClickListener{
@@ -30,7 +30,6 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
     }
 
     fun setOnItemClickListener(listener: onItemClickListener, function: () -> Unit){
-
         mListener = listener
 
     }
@@ -54,7 +53,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
         val discription = userList[position].edtNoteDiscripton
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
         databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
-        databaseCount = FirebaseDatabase.getInstance().getReference("count")
+        databaseCount = FirebaseDatabase.getInstance().getReference(Constants.COUNT)
 
         holder.donetask.setOnClickListener {
 
@@ -88,11 +87,11 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
             holder.donetask.setImageResource(R.drawable.donetask)
 
         }
+
         holder.deletebtn.setOnClickListener {
             idForNote?.let { it1 ->
                 userList.clear()
                 database.child(it1).removeValue();
-
 
                 }
             }
@@ -101,6 +100,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
     override fun getItemCount(): Int {
         return userList.size
+
     }
 
 
@@ -114,6 +114,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
             itemView.setOnClickListener {
                 listener.onItemClick(bindingAdapterPosition)
+
 
             }
 
