@@ -17,22 +17,22 @@ import com.google.firebase.database.*
 class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>()
 {
 
-    private lateinit var database : DatabaseReference
-    private lateinit var databasedone : DatabaseReference
-    private lateinit var databaseCount : DatabaseReference
-    private lateinit var mListener : onItemClickListener
+    private lateinit var database: DatabaseReference
+    private lateinit var databasedone: DatabaseReference
 
+    private lateinit var mListener: OnItemClickListener
 
-    interface onItemClickListener{
+    interface OnItemClickListener {
 
-        fun onItemClick(position : Int)
+        fun onItemClick(position: Int)
 
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener, function: () -> Unit){
+    fun setOnItemClickListener(listener: OnItemClickListener) {
         mListener = listener
 
     }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview = LayoutInflater.from(parent.context).inflate(
@@ -44,57 +44,50 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
     }
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val currentitem = userList[position]
-        holder.titleOfNote.text = currentitem.edtTitleOfNote
+        val currentItem = userList[position]
+        holder.titleOfNote.text = currentItem.edtTitleOfNote
 
         val title = userList[position].edtTitleOfNote
-        val done= userList[position].doneOrNot
+        val done = userList[position].doneOrNot
         val idForNote = userList[position].idForNote
-        val discription = userList[position].edtNoteDiscripton
+        val description = userList[position].edtNoteDescription
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
         databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
-        databaseCount = FirebaseDatabase.getInstance().getReference(Constants.COUNT)
-
-        holder.donetask.setOnClickListener {
 
 
-            if (idForNote != null)
-            { if (done != null)
-                {
-                if (title != null)
-                    {
-                    if (discription != null) {
-                    val User = User(title, discription, idForNote, Constants.DONE_TEXT)
-
-                        database.child(idForNote).child(Constants.TASK_DONE_OR_NOT)
-                            .setValue(Constants.DONE_TEXT)
-                        databasedone.child(idForNote).setValue(User)
+        holder.doneTask.setOnClickListener {
 
 
+            if (idForNote != null) {
+                if (done != null) {
+                    if (title != null) {
+                        if (description != null) {
+                            val User = User(title, description, idForNote, Constants.DONE_TEXT)
+                            database.child(idForNote).child(Constants.TASK_DONE_OR_NOT)
+                                .setValue(Constants.DONE_TEXT)
+                            databasedone.child(idForNote).setValue(User)
 
-                        //holder.cardviewitem.setBackgroundResource(R.drawable.corner)
-                        //holder.donetask.setImageResource(R.drawable.donetask)
-                        //database.child(idForNote).removeValue()
-                        // database.child(idForNote).setValue(User)
-                    }}}}
-
+                        }
+                    }
+                }
+            }
 
         }
 
-        if(done=="yes")
-        {
-            holder.cardviewitem.setBackgroundResource(R.drawable.corner)
-            holder.donetask.setImageResource(R.drawable.donetask)
+        if (done == "yes") {
+
+            holder.cardViewItem.setBackgroundResource(R.drawable.corner)
+            holder.doneTask.setImageResource(R.drawable.donetask)
 
         }
 
-        holder.deletebtn.setOnClickListener {
+        holder.deleteBtn.setOnClickListener {
             idForNote?.let { it1 ->
                 userList.clear()
                 database.child(it1).removeValue();
 
-                }
             }
+        }
     }
 
 
@@ -104,12 +97,13 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
     }
 
 
-    class MyViewHolder(itemview: View,listener: onItemClickListener): RecyclerView.ViewHolder(itemview)
-    {
-        val titleOfNote : TextView = itemview.findViewById(R.id.txtNoteTitle)
-        val donetask : ImageView = itemview.findViewById(R.id.imgDone)
-        val deletebtn : Button = itemview.findViewById(R.id.btnDelete)
-        val cardviewitem : CardView = itemview.findViewById(R.id.carditem)
+    class MyViewHolder(itemview: View, listener: OnItemClickListener) :
+        RecyclerView.ViewHolder(itemview) {
+        val titleOfNote: TextView = itemview.findViewById(R.id.txtNoteTitle)
+        val doneTask: ImageView = itemview.findViewById(R.id.imgDone)
+        val deleteBtn: Button = itemview.findViewById(R.id.btnDelete)
+        val cardViewItem: CardView = itemview.findViewById(R.id.carditem)
+
         init {
 
             itemView.setOnClickListener {
