@@ -23,9 +23,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
     private lateinit var mListener: OnItemClickListener
 
     interface OnItemClickListener {
-
         fun onItemClick(position: Int)
-
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
@@ -56,8 +54,6 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
 
         holder.doneTask.setOnClickListener {
-
-
             if (idForNote != null) {
                 if (done != null) {
                     if (title != null) {

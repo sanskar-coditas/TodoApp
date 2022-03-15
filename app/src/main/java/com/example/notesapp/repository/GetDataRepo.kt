@@ -23,7 +23,6 @@ class GetDataRepo {
 
         fun onAdapter(userArrayListAfter: ArrayList<User>, countTask: Int)
 
-
     }
 
     fun initOnClickInterface(callback: CallbackInterfaceGet) {
@@ -94,6 +93,12 @@ class GetDataRepo {
         databasedone.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
+
+
+
+
+
+
                 userArrayListDone.clear()
                 if (snapshot.exists()) {
 
@@ -104,6 +109,8 @@ class GetDataRepo {
 
                         Log.d("USER", "${user.toString()}")
                     }
+
+
                     mcallbackDone.onAdapter(userArrayListDone)
 
 

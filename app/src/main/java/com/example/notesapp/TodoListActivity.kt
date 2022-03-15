@@ -20,6 +20,7 @@ import com.example.notesapp.repository.GetDataRepo
 import com.example.notesapp.viewmodels.TodoViewModel
 import com.example.notesapp.viewmodels.TodoViewModelFactory
 import com.google.firebase.database.*
+import kotlinx.android.synthetic.main.activity_todo_list.*
 import kotlin.collections.ArrayList
 
 class TodoListActivity : AppCompatActivity() {
@@ -40,10 +41,10 @@ class TodoListActivity : AppCompatActivity() {
         getSupportActionBar()?.setCustomView(R.layout.abs)
 
         binding.todoList.layoutManager = LinearLayoutManager(this)
-        binding.todoListForDone.layoutManager = LinearLayoutManager(this)
+        //binding.todoListForDone.layoutManager = LinearLayoutManager(this)
 
         binding.todoList.setHasFixedSize(true)
-        binding.todoListForDone.setHasFixedSize(true)
+       // binding.todoListForDone.setHasFixedSize(true)
 
         userArrayList = arrayListOf()
         userArrayListDone = arrayListOf()
@@ -120,6 +121,7 @@ class TodoListActivity : AppCompatActivity() {
     {
         todoViewModel.callbackGettingDataCompleted(object: GetDataRepo.CallbackInterfaceGetCompleted{
             override fun onAdapter(userArrayListAfter: java.util.ArrayList<User>) {
+
                 val adapter = MyAdapterForDone(userArrayListAfter)
                 binding.todoListForDone.adapter = adapter
             }
