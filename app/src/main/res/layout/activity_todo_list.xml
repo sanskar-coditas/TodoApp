@@ -4,12 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
 
-
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mainactivityback"
         tools:context=".TodoListActivity">
+
 
 
         <androidx.viewpager2.widget.ViewPager2
@@ -32,25 +36,24 @@
             android:fontFamily="@font/lato_bold"
             android:text="Remaining Tasks"
             android:textSize="25sp"
-            app:layout_constraintStart_toStartOf="@id/todoListForDone"
             app:layout_constraintTop_toBottomOf="@id/todoListForDone"
+            app:layout_constraintStart_toStartOf="@id/todoListForDone"
+
             android:paddingStart="23dp"
             android:paddingEnd="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
 
-            />
+             />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/todoList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/itemCount"
-
             app:layout_constraintTop_toBottomOf="@+id/itemCount"
             tools:listitem="@layout/single_todo_item" />
 
@@ -69,4 +72,5 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </layout>

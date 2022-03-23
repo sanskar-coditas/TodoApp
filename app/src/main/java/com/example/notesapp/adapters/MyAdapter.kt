@@ -49,6 +49,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
         val done = userList[position].doneOrNot
         val idForNote = userList[position].idForNote
         val description = userList[position].edtNoteDescription
+        val priorityOfTask = userList[position].priorityOfTask
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
         databasedone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
 
@@ -70,11 +71,23 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
 
         }
 
-        if (done == "yes") {
+        if (done == "yes"){
 
             holder.cardViewItem.setBackgroundResource(R.drawable.corner)
             holder.doneTask.setImageResource(R.drawable.donetask)
 
+        }
+
+        when {
+            priorityOfTask=="Imp" -> {
+                holder.priority.setImageResource(R.drawable.pr1)
+            }
+            priorityOfTask.equals("VImp") -> {
+                holder.priority.setImageResource(R.drawable.pr2)
+            }
+            priorityOfTask.equals("VVImp") -> {
+                holder.priority.setImageResource(R.drawable.pr3)
+            }
         }
 
         holder.deleteBtn.setOnClickListener {
@@ -99,6 +112,7 @@ class MyAdapter(private val userList: ArrayList<User>) : RecyclerView.Adapter<My
         val doneTask: ImageView = itemview.findViewById(R.id.imgDone)
         val deleteBtn: Button = itemview.findViewById(R.id.btnDelete)
         val cardViewItem: CardView = itemview.findViewById(R.id.carditem)
+        val priority : ImageView=itemview.findViewById(R.id.priorityOfTask)
 
         init {
 

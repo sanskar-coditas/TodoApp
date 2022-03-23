@@ -41,10 +41,9 @@ class TodoListActivity : AppCompatActivity() {
         getSupportActionBar()?.setCustomView(R.layout.abs)
 
         binding.todoList.layoutManager = LinearLayoutManager(this)
-        //binding.todoListForDone.layoutManager = LinearLayoutManager(this)
 
         binding.todoList.setHasFixedSize(true)
-       // binding.todoListForDone.setHasFixedSize(true)
+
 
         userArrayList = arrayListOf()
         userArrayListDone = arrayListOf()
@@ -86,7 +85,6 @@ class TodoListActivity : AppCompatActivity() {
 
                 val adapter = MyAdapter(userArrayListAfter)
                 binding.todoList.adapter = adapter
-
                 binding.itemCount.text = getString(R.string.remaining_Task, countTask)
 
                 adapter.setOnItemClickListener(object : MyAdapter.OnItemClickListener {
@@ -94,13 +92,14 @@ class TodoListActivity : AppCompatActivity() {
                         val idForNote = userArrayList[position].idForNote
                         val edtTitleOfNote = userArrayList[position].edtTitleOfNote
                         val edtNoteDiscripton = userArrayList[position].edtNoteDescription
-
+                        val taskPriority = userArrayList[position].priorityOfTask
                         val intent = Intent(this@TodoListActivity, MainActivity::class.java)
 
                         intent.putExtra(Constants.NOTE_TYPE, Constants.EDIT)
                         intent.putExtra(Constants.TITLE_OF_TASK, edtTitleOfNote)
                         intent.putExtra(Constants.DESCRIPTION_OF_TASK, edtNoteDiscripton)
                         intent.putExtra(Constants.ID_OF_TASK, idForNote)
+                        intent.putExtra(Constants.PRIORITY_OF_NOTE, taskPriority)
 
                         Log.d("idofnote", "$idForNote")
                         Log.d("noteTitle", "$edtTitleOfNote")

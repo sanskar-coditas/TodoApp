@@ -1,11 +1,15 @@
 package com.example.notesapp
 
+import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
+import androidx.core.view.get
 import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.constants.Constants
 import com.example.notesapp.databinding.MainActivityBinding
@@ -16,6 +20,7 @@ import com.example.notesapp.viewmodels.MainViewModelFactory
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.main_activity.*
+import kotlinx.android.synthetic.main.single_todo_item.*
 import java.util.*
 
 
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var database: DatabaseReference
     lateinit var mainViewModel: MainViewModel
     private val taskInOpRepo = TaskInOpRepo()
+    lateinit var spPriorityVal : String
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +57,12 @@ class MainActivity : AppCompatActivity() {
 
             val noteTitle = intent.getStringExtra(Constants.TITLE_OF_TASK)
             val noteDesc = intent.getStringExtra(Constants.DESCRIPTION_OF_TASK)
-
+            val notePriority = intent.getStringExtra(Constants.PRIORITY_OF_NOTE)
             enterButton.text = Constants.UPDATE_BUTTON_TEXT
             edtTitleOfNote.setText(noteTitle)
             edtNoteDiscripton.setText(noteDesc)
+
+
 
             if (noteType.equals(Constants.EDIT)) {
                 binding.btnDelete.visibility = View.VISIBLE
@@ -100,7 +108,16 @@ class MainActivity : AppCompatActivity() {
 
         })
 
+        binding.spPriority.onItemSelectedListener=object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(adapterView: AdapterView<*>?, VIEW: View?, position: Int, id: Long) {
+               spPriorityVal = adapterView?.getItemAtPosition(position).toString()
+            }
 
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
+        }
 
         binding.enterButton.setOnClickListener {
 
@@ -109,13 +126,40 @@ class MainActivity : AppCompatActivity() {
             val idForNote = UUID.randomUUID().toString()
             val doneNot = Constants.NOT_DONE_TEXT
 
+
             val allDataAll =
-                TaskOfNote(titleOfNote, discretionNote, idForNote, doneNot, noteType, noteIdp)
+                TaskOfNote(titleOfNote, discretionNote, idForNote, doneNot, noteType, noteIdp, spPriorityVal)
+
             Log.d("sanskarpawar", allDataAll.toString())
             mainViewModel.insertData(allDataAll)
 
 
         }
+        binding.showList.setOnClickListener {
+            onShare()
+        }
+
+
+
     }
+
+
+    private fun onShare()
+    {
+        val shareIntent = ShareCompat.IntentBuilder(this)
+                    //IntentBuilder is a helper for constructing ACTION_SEND and ACTION_SEND_MULTIPLE sharing intents and starting activities to share content.
+                  //The ComponentName and package name of the calling activity will be included.
+            .setText(getString(R.string.share_text, binding.edtTitleOfNote.text.toString(), binding.edtNoteDiscripton.text.toString()))
+            .setType("text/plain")
+            .intent
+        try {
+            startActivity(shareIntent)
+        } catch (ex: ActivityNotFoundException) {
+            Toast.makeText(this, getString(R.string.sharing_not_available),
+                Toast.LENGTH_LONG).show()
+        }
+    }
+
+
 
 }

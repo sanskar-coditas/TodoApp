@@ -9,5 +9,6 @@ data class TaskOfNote(
     val doneNot:String?=null,
     val noteType: String?=null,
     val noteIdp:String?=null,
+    val priorityOfTask : String? = null
 
     )

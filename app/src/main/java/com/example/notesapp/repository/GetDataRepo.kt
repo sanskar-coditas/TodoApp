@@ -93,12 +93,6 @@ class GetDataRepo {
         databasedone.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
 
-
-
-
-
-
-
                 userArrayListDone.clear()
                 if (snapshot.exists()) {
 
