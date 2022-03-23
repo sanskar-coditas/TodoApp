@@ -5,7 +5,7 @@ class Constants {
         companion object {
             const val ROOT_NODE_TODO = "Todo"
             const val TITLE_OF_TASK = "edtTitleOfNote"
-            const val DISCRIPTION_OF_TASK = "edtNoteDiscripton"
+            const val DESCRIPTION_OF_TASK = "edtNoteDiscripton"
             const val ID_OF_TASK = "idForNote"
             const val TASK_DONE_OR_NOT = "doneOrNot"
             const val UPDATE_BUTTON_TEXT ="Update Task"

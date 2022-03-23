@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.notesapp.constants.Constants
 import com.example.notesapp.databinding.MainActivityBinding
 import com.example.notesapp.dataclasses.TaskOfNote
-
 import com.example.notesapp.repository.TaskInOpRepo
 import com.example.notesapp.viewmodels.MainViewModel
 import com.example.notesapp.viewmodels.MainViewModelFactory
@@ -22,62 +21,49 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : MainActivityBinding
-    private lateinit var database : DatabaseReference
+    private lateinit var binding: MainActivityBinding
+    private lateinit var database: DatabaseReference
     lateinit var mainViewModel: MainViewModel
-    private val taskInOpRepo= TaskInOpRepo()
+    private val taskInOpRepo = TaskInOpRepo()
 
-
-
-        //val id  String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-     getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
+
+        getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         getSupportActionBar()?.setCustomView(R.layout.abs);
 
 
 
         database = FirebaseDatabase.getInstance().getReference(getString(R.string.databaseRefTodo))
-           // val taskInOpRepo = TaskInOpRepo()
-            mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
-            MainViewModel::class.java)
 
-
+        mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
+            MainViewModel::class.java
+        )
 
 
         val noteIdp = intent.getStringExtra(getString(R.string.uniqueIdForTask))
-        val noteType= intent.getStringExtra(getString(R.string.notetype))
+        val noteType = intent.getStringExtra(getString(R.string.notetype))
 
+        if (noteType.equals(getString(R.string.edit))) {
 
-        if(noteType.equals(getString(R.string.edit))){
-           //LoggerTodo.LogDebug(noteType.toString())
-            val noteTitle=intent.getStringExtra(Constants.TITLE_OF_TASK)
-            val noteDesc=intent.getStringExtra(Constants.DISCRIPTION_OF_TASK)
-
-          //  LoggerTodo.LogDebug("LogTest")
-           // LoggerTodo.LogError("LogTest")
-           // LoggerTodo.LogInfo("LogTest")
-           // LoggerTodo.LogWarn("LogTest")
-           // LoggerTodo.LogVerbose("LogTest")
-           // LoggerTodo.LogAssert("LogTest")
+            val noteTitle = intent.getStringExtra(Constants.TITLE_OF_TASK)
+            val noteDesc = intent.getStringExtra(Constants.DESCRIPTION_OF_TASK)
 
             enterButton.text = Constants.UPDATE_BUTTON_TEXT
             edtTitleOfNote.setText(noteTitle)
             edtNoteDiscripton.setText(noteDesc)
 
-            //Delete functionality
-            if(noteType.equals(Constants.EDIT))
-            {
-                binding.btnDelete.visibility= View.VISIBLE
+            if (noteType.equals(Constants.EDIT)) {
+                binding.btnDelete.visibility = View.VISIBLE
 
                 binding.btnDelete.setOnClickListener {
 
                     mainViewModel.deleteData(noteIdp.toString())
 
-                    mainViewModel.callbackDataDelete(object: TaskInOpRepo.SomeCallbackDelete{
+                    mainViewModel.callbackDataDelete(object : TaskInOpRepo.SomeCallbackDelete {
                         override fun onSuccess() {
                             Toast.makeText(this@MainActivity, Constants.TASK_DELETED_MSG, Toast.LENGTH_SHORT).show()
                             binding.edtTitleOfNote.text.clear()
@@ -89,31 +75,32 @@ class MainActivity : AppCompatActivity() {
                         }
 
                     })
-
-
-
                 }
             }
-        }
-        else
-        {
+        } else {
             enterButton.text = Constants.ENTER_BUTTON_TEXT
         }
 
-        mainViewModel.callbackData(object: TaskInOpRepo.SomeCallbackInterface{
+
+
+        mainViewModel.callbackData(object : TaskInOpRepo.CallbackInterfaceInsert {
 
             override fun onSuccess() {
                 LoggerTodo.logInfo("callbackdata in inside onSuccess main activity")
-                Toast.makeText(this@MainActivity, Constants.TASK_SAVED_MSG, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, Constants.TASK_SAVED_MSG, Toast.LENGTH_SHORT)
+                    .show()
                 binding.edtTitleOfNote.text.clear()
                 binding.edtNoteDiscripton.text.clear()
             }
 
             override fun onFailure() {
-                Toast.makeText(this@MainActivity, Constants.FAILED_SAVE_MSG, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, Constants.FAILED_SAVE_MSG, Toast.LENGTH_SHORT)
+                    .show()
             }
 
         })
+
+
 
         binding.enterButton.setOnClickListener {
 
@@ -122,87 +109,13 @@ class MainActivity : AppCompatActivity() {
             val idForNote = UUID.randomUUID().toString()
             val doneNot = Constants.NOT_DONE_TEXT
 
-
-            val allDataAll = TaskOfNote(titleOfNote,discretionNote,idForNote,doneNot,noteType,noteIdp)
-            Log.d("sanskarpawar",allDataAll.toString())
-
+            val allDataAll =
+                TaskOfNote(titleOfNote, discretionNote, idForNote, doneNot, noteType, noteIdp)
+            Log.d("sanskarpawar", allDataAll.toString())
             mainViewModel.insertData(allDataAll)
 
 
-
-
-
         }
-
-
-
-
-
-
-
-
-
-
-
-
-       /*binding.enterButton.setOnClickListener {
-
-            val titleofnote = binding.edtTitleOfNote.text.toString()
-            val discription = binding.edtNoteDiscripton.text.toString()
-            val idForNote = UUID.randomUUID().toString()
-            val doneNot = Constants.NOT_DONE_TEXT
-            //val timetext = ServerValue.TIMESTAMP.toString()
-            database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
-
-            val User = User(titleofnote,discription,idForNote,doneNot)
-            if(!noteType.equals(Constants.EDIT)) {
-
-                if (!TextUtils.isEmpty(titleofnote) && !TextUtils.isEmpty(discription)) {
-
-                    database.child(idForNote).setValue(User).addOnSuccessListener {
-                        binding.edtTitleOfNote.text.clear()
-                        binding.edtNoteDiscripton.text.clear()
-                        //database.child(idForNote).child("timestamp").setValue(ServerValue.TIMESTAMP)
-                        Toast.makeText(this, Constants.TASK_SAVED_MSG, Toast.LENGTH_SHORT).show()
-
-                    }.addOnFailureListener {
-
-                        Toast.makeText(this, Constants.FAILED_SAVE_MSG, Toast.LENGTH_SHORT).show()
-
-
-                    }
-
-
-                } else
-                    Toast.makeText(this, Constants.FILL_EMPTY_MSG, Toast.LENGTH_SHORT).show()
-            }
-            else
-            {
-                val note= mapOf(
-                    Constants.TITLE_OF_TASK to titleofnote,
-                    Constants.DISCRIPTION_OF_TASK to discription,
-                    Constants.ID_OF_TASK to noteidp
-
-                )
-
-                noteidp?.let { it1 ->
-                    database.child(it1).updateChildren(note).addOnSuccessListener {
-                        edtTitleOfNote.text.clear()
-                        edtNoteDiscripton.text.clear()
-
-                        Toast.makeText(this, Constants.TASK_UPDATE_MSG, Toast.LENGTH_SHORT).show()
-                    }.addOnFailureListener {
-                        Toast.makeText(this, Constants.FAILED_UPDATE_MSG, Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-            }
-
-        }*/
-
-
     }
-
-
 
 }

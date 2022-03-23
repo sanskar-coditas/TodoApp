@@ -7,23 +7,24 @@ import com.example.notesapp.dataclasses.TaskOfNote
 
 import com.example.notesapp.repository.TaskInOpRepo
 
-class MainViewModel(private val taskInOpRepo: TaskInOpRepo):ViewModel() {
+class MainViewModel(private val taskInOpRepo: TaskInOpRepo) : ViewModel() {
 
-    fun callbackData(mCallBackData:TaskInOpRepo.SomeCallbackInterface){
+    fun callbackData(mCallBackData: TaskInOpRepo.CallbackInterfaceInsert) {
         LoggerTodo.logInfo("callbackdata mainviewmodel ")
-       return taskInOpRepo.initOnClickInterface(mCallBackData)
+        return taskInOpRepo.initOnClickInterface(mCallBackData)
     }
 
-    fun callbackDataDelete(mCallBackDataDelete:TaskInOpRepo.SomeCallbackDelete){
+    fun callbackDataDelete(mCallBackDataDelete: TaskInOpRepo.SomeCallbackDelete) {
 
         return taskInOpRepo.initOnClickDelete(mCallBackDataDelete)
     }
-    fun insertData (taskOfNote: TaskOfNote)
-    {
+
+
+    fun insertData(taskOfNote: TaskOfNote) {
         return taskInOpRepo.insertingData(taskOfNote)
     }
-    fun deleteData(noteID:String)
-    {
+
+    fun deleteData(noteID: String) {
         return taskInOpRepo.deletingData(noteID)
     }
 
