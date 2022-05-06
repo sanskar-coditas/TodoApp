@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,7 @@ class MyAdapterForDone(private val userList: ArrayList<User>) : RecyclerView.Ada
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemview = LayoutInflater.from(parent.context).inflate(
-            R.layout.single_todo_item,
+            R.layout.single_todo_list_viewpager,
             parent, false
         )
 
@@ -39,7 +40,7 @@ class MyAdapterForDone(private val userList: ArrayList<User>) : RecyclerView.Ada
         database = FirebaseDatabase.getInstance().getReference(Constants.ROOT_NODE_TODO)
         databaseDone = FirebaseDatabase.getInstance().getReference(Constants.COMPLETED)
 
-        holder.cardViewItem.setBackgroundResource(R.drawable.corner)
+        holder.lin.setBackgroundResource(R.drawable.corner)
         holder.doneTask.setImageResource(R.drawable.donetask)
 
         holder.deleteBtn.setOnClickListener {
@@ -61,5 +62,7 @@ class MyAdapterForDone(private val userList: ArrayList<User>) : RecyclerView.Ada
         val doneTask: ImageView = itemview.findViewById(R.id.imgDone)
         val cardViewItem: CardView = itemview.findViewById(R.id.carditem)
         val deleteBtn: Button = itemview.findViewById(R.id.btnDelete)
+        val lin : LinearLayout=itemview.findViewById(R.id.layoutForTask)
+
     }
 }

@@ -7,7 +7,7 @@
     <string name="mark_task_as_done">Mark task as Done</string>
     <string name="sampletext">Todo thing which you saved.......</string>
     <string name="delete_note">delete note</string>
-    <string name="list">list</string>
+    <string name="list">Share</string>
     <string name="update_note">Upadate Note</string>
     <string name="save_note">Save Note</string>
     <string name="notetype">noteType</string>
@@ -17,7 +17,17 @@
     <string name="databaseRefTodo">Todo</string>
     <string name="uniqueIdForTask">idForNote</string>
     <string name="AppName">My Todo</string>
-
-
+    <string name="share_text">Title of Note: %1$s Description: %2$s$ #ToDo Task</string>
+    <string name="sharing_not_available">Sharing Not Available</string>
     <string name="remaining_Task">Remaining Task(%1$d)</string>
+
+    <string-array name="priority">
+        <item>Imp</item>
+        <item>VImp</item>
+        <item>VVImp</item>
+    </string-array>
+
+
+
+
 </resources>

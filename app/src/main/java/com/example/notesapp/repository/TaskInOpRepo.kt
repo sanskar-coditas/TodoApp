@@ -32,7 +32,9 @@ class TaskInOpRepo {
             taskOfNote.titleOfNote,
             taskOfNote.description,
             taskOfNote.idForNote,
-            taskOfNote.doneNot
+            taskOfNote.doneNot,
+            taskOfNote.priorityOfTask
+
         )
 
         if (!taskOfNote.noteType.equals(Constants.EDIT)) {
@@ -57,6 +59,7 @@ class TaskInOpRepo {
             val note = mapOf(
                 Constants.TITLE_OF_TASK to taskOfNote.titleOfNote,
                 Constants.DESCRIPTION_OF_TASK to taskOfNote.description,
+                Constants.PRIORITY_OF_NOTE to taskOfNote.priorityOfTask,
                 Constants.ID_OF_TASK to taskOfNote.noteIdp
             )
 
