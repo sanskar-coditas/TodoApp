@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
+       //merge conflicts to understand
         database = FirebaseDatabase.getInstance().getReference(getString(R.string.databaseRefTodo))
 
         mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
