@@ -161,10 +161,8 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    // This is the line to generate the conflict2
-    //this one is as well
-    //this one is
-    // also this one with other conflicts2
+    // This is the line to generate the conflict in code
+    // also this one
 
 
 
