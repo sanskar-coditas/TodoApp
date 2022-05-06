@@ -41,9 +41,6 @@ class MainActivity : AppCompatActivity() {
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         getSupportActionBar()?.setCustomView(R.layout.abs);
 
-
-
-       //merge conflicts to understand
         database = FirebaseDatabase.getInstance().getReference(getString(R.string.databaseRefTodo))
 
         mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
@@ -67,6 +64,8 @@ class MainActivity : AppCompatActivity() {
 
             if (noteType.equals(Constants.EDIT)) {
                 binding.btnDelete.visibility = View.VISIBLE
+                // added to generate the conflcits
+
 
                 binding.btnDelete.setOnClickListener {
 
