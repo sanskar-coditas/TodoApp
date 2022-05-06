@@ -33,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var spPriorityVal : String
 
 
+    //conflcts understanding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
