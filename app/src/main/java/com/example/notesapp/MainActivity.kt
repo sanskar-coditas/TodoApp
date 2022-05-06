@@ -33,26 +33,23 @@ class MainActivity : AppCompatActivity() {
     lateinit var spPriorityVal : String
 
 
+    //conflcts understanding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val noteType = intent.getStringExtra(getString(R.string.notetype))
 
         getSupportActionBar()?.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM)
         getSupportActionBar()?.setCustomView(R.layout.abs);
 
-
-
         database = FirebaseDatabase.getInstance().getReference(getString(R.string.databaseRefTodo))
 
-        mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
-            MainViewModel::class.java
-        )
+
 
 
         val noteIdp = intent.getStringExtra(getString(R.string.uniqueIdForTask))
-        val noteType = intent.getStringExtra(getString(R.string.notetype))
-
         if (noteType.equals(getString(R.string.edit))) {
 
             val noteTitle = intent.getStringExtra(Constants.TITLE_OF_TASK)
@@ -62,10 +59,14 @@ class MainActivity : AppCompatActivity() {
             edtTitleOfNote.setText(noteTitle)
             edtNoteDiscripton.setText(noteDesc)
 
-
+            mainViewModel = ViewModelProvider(this, MainViewModelFactory(taskInOpRepo)).get(
+                MainViewModel::class.java
+            )
 
             if (noteType.equals(Constants.EDIT)) {
                 binding.btnDelete.visibility = View.VISIBLE
+                // added to generate the conflcits
+
 
                 binding.btnDelete.setOnClickListener {
 
